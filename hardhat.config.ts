@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
             chainId: 31337,
             forking: {
                 url: ROPSTEN_RPC_URL!,
-                blockNumber: 12885583,
+                blockNumber: 12889392,
             },
         },
         ropsten: {
