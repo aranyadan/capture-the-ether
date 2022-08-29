@@ -7,7 +7,7 @@ import {
 import { assert, expect } from "chai"
 import { ethers } from "hardhat"
 
-describe("Guess Secret Number challenge", function () {
+describe("Guess New Number challenge", function () {
     let attacker: SignerWithAddress
     let target: GuessTheRandomNumberChallenge
     before(async function () {
@@ -22,7 +22,7 @@ describe("Guess Secret Number challenge", function () {
         )
     })
 
-    it("Guesses the secret number", async function () {
+    it("Guesses the new number", async function () {
         // Exploit code here
         const attackerFactory: GuessNewAttacker__factory =
             await ethers.getContractFactory("GuessNewAttacker")

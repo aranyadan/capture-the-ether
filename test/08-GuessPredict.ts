@@ -8,7 +8,7 @@ import { assert, expect } from "chai"
 import { ethers, network } from "hardhat"
 import { mine } from "@nomicfoundation/hardhat-network-helpers"
 
-describe("Guess Secret Number challenge", function () {
+describe("Guess / Predict the number challenge", function () {
     let attacker: SignerWithAddress
     let target: PredictTheFutureChallenge
     before(async function () {
@@ -23,7 +23,7 @@ describe("Guess Secret Number challenge", function () {
         )
     })
 
-    it("Guesses the secret number", async function () {
+    it("Guesses the predicted number", async function () {
         // Exploit code here
         const attackerFactory: GuessPredictAttacker__factory =
             await ethers.getContractFactory("GuessPredictAttacker")

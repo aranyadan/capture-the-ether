@@ -10,7 +10,9 @@
     "05-guess-secret": "yarn hardhat test test/05-GuessSecret.ts",
     "06-guessrandom": "yarn hardhat test test/06-GuessRandom.ts",
     "07-guessnew": "yarn hardhat test test/07-GuessNew.ts",
-    "08-guesspredict": "yarn hardhat test test/08-GuessPredict.ts"
+    "08-guesspredict": "yarn hardhat test test/08-GuessPredict.ts",
+    "09-guessblockhash": "yarn hardhat test test/09-GuessBlockhash.ts",
+    "10-tokenSale": "yarn hardhat test test/10-TokenSale.ts"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",

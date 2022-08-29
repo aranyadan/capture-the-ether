@@ -3,7 +3,7 @@ import { GuessTheRandomNumberChallenge } from "../typechain-types"
 import { assert, expect } from "chai"
 import { ethers } from "hardhat"
 
-describe("Guess Secret Number challenge", function () {
+describe("Guess Random Number challenge", function () {
     let attacker: SignerWithAddress
     let target: GuessTheRandomNumberChallenge
     before(async function () {
@@ -18,7 +18,7 @@ describe("Guess Secret Number challenge", function () {
         )
     })
 
-    it("Guesses the secret number", async function () {
+    it("Guesses the random number", async function () {
         // Exploit code here
         let secret = await ethers.provider.getStorageAt(target.address, 0)
         console.log("Secret:", secret.toString())

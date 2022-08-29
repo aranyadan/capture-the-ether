@@ -20,6 +20,7 @@ const config: HardhatUserConfig = {
             { version: "0.4.21" },
             { version: "0.5.0" },
             { version: "0.6.12" },
+            { version: "0.7.0" },
             { version: "0.8.0" },
         ],
     },
@@ -32,7 +33,7 @@ const config: HardhatUserConfig = {
             chainId: 31337,
             forking: {
                 url: ROPSTEN_RPC_URL!,
-                blockNumber: 12884939,
+                blockNumber: 12885583,
             },
         },
         ropsten: {
